@@ -1,0 +1,124 @@
+<!---
+I hereby attest to the truth of the following facts:
+1. I have not discussed the HTML, CSS, Python language code in my program with anyone other than my instructor or the teaching assistants assigned to this course.
+2. I have not used HTML, CSS, Python language code obtained from another student, or any other unauthorized source, either modified or unmodified.
+3. If any HTML, CSS, Python language code or documentation used in my program was obtained from another source, such as textbook or course notes, that has been clearly noted with a proper citation in the comments of my program.
+-->
+
+{% extends 'payroll_app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-8 overflow-auto">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="card overflow-auto" style="margin-bottom:5%">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <h4 class="card-title"> Payroll Creation</h5>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div>
+                {% for employee in employees %}
+                <form method="POST" action="{% url 'submit_payslip' pk=employee.pk %}">{% csrf_token %}
+                {% endfor %}
+                    <div class="mb-3">
+                        <label for="payrollFor" class="form-label">Payroll For:</label><br>
+                        <select class="form-select outline-border" id="payrollFor" name="payrollFor" style="padding:6px;" required>
+                            <option value="All">All Employees</option>
+                            {% for employee in employees reversed %}
+                            <option value="{{ employee.id_number }}">{{ employee.id_number }} | {{ employee.name }}</option>
+                            {% empty %}
+                                <option value="None">No employees found.</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="payrollMonth" class="form-label">Month:</label>
+                        <select class="form-select outline-border" id="payrollMonth" name="payrollMonth" style="padding:6px;" required>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class = "col">
+                        <label for="payrollYear" class="form-label">Year:</label>
+                        <input type="number" class="form-control" id="payrollYear" name="payrollYear" min="0" step="1" onKeyPress="if(this.value.length==4) return false;" required>
+                        </div>
+
+                        <div class = "col">
+                        <label for="payrollCycle" class="form-label">Cycle:</label>
+                        <select class="form-select outline-border" id="payrollCycle" name="payrollCycle" style="padding:6px;" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>  
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card overflow-auto" style="margin-bottom:10%">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <h4 class="card-title"> Payslips Summary</h5>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="scrollable">
+            <table class="table table-striped">
+                <thead>
+                    <th scope="col">ID Number</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Cycle</th>  
+                    <th scope="col">Total Pay</th>
+                    <th scope="col">Options</th>
+                </thead>
+                <tbody>
+                    {% for payslip in payslips reversed %}
+                        <tr> 
+                            <td>{{ payslip.id_number.id_number }}</td>
+                            <td>{{ payslip.date_range }}, {{ payslip.year }} </td>
+                            <td>{{ payslip.pay_cycle }}</td>
+                            <td>{{ payslip.total_pay }}</td>
+                            {% if payslip.pay_cycle == 1 %}
+                            <td><a href="{% url 'view_payslip1' pk=payslip.pk %}" class="btn btn-primary">View</a></td>
+                            {% elif payslip.pay_cycle == 2 %}
+                            <td><a href="{% url 'view_payslip2' pk=payslip.pk %}" class="btn btn-primary">View</a></td>
+                            {% endif %}
+                        </tr>    
+                    {% endfor %}
+                </tbody>
+            </div>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

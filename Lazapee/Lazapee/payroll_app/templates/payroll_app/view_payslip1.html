@@ -1,0 +1,90 @@
+<!---
+I hereby attest to the truth of the following facts:
+1. I have not discussed the HTML, CSS, Python language code in my program with anyone other than my instructor or the teaching assistants assigned to this course.
+2. I have not used HTML, CSS, Python language code obtained from another student, or any other unauthorized source, either modified or unmodified.
+3. If any HTML, CSS, Python language code or documentation used in my program was obtained from another source, such as textbook or course notes, that has been clearly noted with a proper citation in the comments of my program.
+-->
+
+{% extends 'payroll_app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-8 overflow-auto">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card overflow-auto">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <h4 class="card-title"> View Payslip</h5>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="invoice-container">
+                <div id="invoice-header" class="row">
+                    <div class="col-md-6">  
+                        <p>NAME: {{d.id_number.name}}</p> 
+                        <p>ID NUMBER: {{d.id_number.id_number}}</p>
+                    </div>
+                    <div class="col-md-6 text-md-right">
+                        <p>PAYSLIP ID: {{d.pk}}</p>
+                        <p>DATE: {{d.date_range}}, {{d.year}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="invoice-body">
+                <table id="invoice-items" class="table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Earnings: Base Pay</td>
+                            <td>PHP {{d.rate}}</td>
+                        </tr>
+                        <tr>
+                            <td>Earnings: Allowances</td>
+                            <td>PHP {{d.earnings_allowance}}</td>
+                        </tr>
+                        <tr>
+                            <td>Earnings: Overtime</td>
+                            <td>PHP {{d.overtime}}</td>
+                        </tr>
+                        <tr>
+                            <th>Gross Pay</th>
+                            <th>PHP {{d.gross_pay}}</th>
+                        </tr>
+                        <tr>
+                            <td>Deductions: Withholding Tax</td>
+                            <td>PHP {{d.deductions_tax}}</td>
+                        </tr>
+                            <tr>
+                                <td>Deductions: Pag-ibig</td>
+                                <td>PHP {{d.pag_ibig}}</td>
+                            </tr>
+                        <tr>
+                            <th>Total Deductions</th>
+                            <th>PHP {{d.total_deductions}}</th>
+                        </tr>
+                        <tr>
+                            <th>Net Pay</th>
+                            <th>PHP {{d.total_pay}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+<!---
+I hereby attest to the truth of the following facts:
+1. I have not discussed the HTML, CSS, Python language code in my program with anyone other than my instructor or the teaching assistants assigned to this course.
+2. I have not used HTML, CSS, Python language code obtained from another student, or any other unauthorized source, either modified or unmodified.
+3. If any HTML, CSS, Python language code or documentation used in my program was obtained from another source, such as textbook or course notes, that has been clearly noted with a proper citation in the comments of my program.
+-->
+
+{% extends 'payroll_app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-8 overflow-auto">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+
+    <div class="card overflow-auto">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <h4 class="card-title"> Create Employee</h5>
+                </div>
+            </div>
+        </div>
+    <div class="card-body">
+        <div>
+            <form method="POST" action="{% url 'create_employee' %}">{% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="uSKU" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="nuName" name="nuName" required>
+                    </div>
+
+                <div class="mb-3">
+                    <label for="uBrand" class="form-label">ID Number:</label>
+                    <input type="number" class="form-control" id="nuID" name="nuID" min="0" step="1" onKeyPress="if(this.value.length==16) return false;" required>
+                </div>
+
+                <div class="row mb-3">
+                    <div class = "col">
+                    <label for="uCost" class="form-label">Rate:</label>
+                    <input type="number" class="form-control" id="nuRate" name="nuRate" min="0" step="any" required>
+                    </div>
+
+                    <div class = "col">
+                    <label for="uSize" class="form-label">Allowance (optional):</label>
+                    <input type="number" class="form-control" id="nuAllowance" name="nuAllowance" min="0" step="any" value="0">
+                    </div>
+                </div>
+
+                
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-danger" href="{% url 'employee' %}">Cancel</a>
+
+            </form>  
+        </div>
+    </div>
+</div>
+
+{% endblock %}
